@@ -1,0 +1,1753 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Powerpulse team 5",
+        "description": "Training diary",
+        "license": {
+            "name": "GNU GENERAL PUBLIC LICENSE",
+            "url": "https://www.gnu.org/licenses/gpl-3.0.html"
+        }
+    },
+    "consumes": [
+        "application/json",
+        "multipart/form-data"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "servers": [
+        {
+            "url": "https://powerpulse-t5-backend.onrender.com/api/"
+        }
+    ],
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Authorization endpoints"
+        },
+        {
+            "name": "Products",
+            "description": "Products (food) endpoints"
+        },
+        {
+            "name": "Diaries",
+            "description": "User's diary endpoints"
+        },
+        {
+            "name": "Users",
+            "description": "User's basic information"
+        },
+        {
+            "name": "Profiles",
+            "description": "User's sport profile"
+        },
+        {
+            "name": "Exercises",
+            "description": "Exercises list"
+        },
+        {
+            "name": "Statistics",
+            "description": "Application statistics"
+        }
+    ],
+    "paths": {
+        "/auth/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "User registration",
+                "requestBody": {
+                    "description": "Registration object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ReistrationRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RegistrationResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request (invalid request body)"
+                    },
+                    "409": {
+                        "description": "Email already in use"
+                    }
+                }
+            }
+        },
+        "/auth/verify": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Verify user's email",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "verificationToken",
+                        "required": true,
+                        "description": "Verification token"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Verification successful"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Request user's email verification",
+                "requestBody": {
+                    "description": "Verification object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/VerificationRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Verification email sent"
+                    },
+                    "400": {
+                        "description": "Verification has already been passed"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
+        "/auth/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "User login",
+                "requestBody": {
+                    "description": "Login object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LoginResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Email not verified"
+                    },
+                    "404": {
+                        "description": "No such user/password combination"
+                    }
+                }
+            }
+        },
+        "/auth/current": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Current user",
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CurrentUserResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout user",
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No content (Operation successful)"
+                    }
+                }
+            }
+        },
+        "/products": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Products list",
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "recommended",
+                        "schema": {
+                            "type": "boolean"
+                        },
+                        "description": "Filters by user's blood type. If not defined or traning profile doesn't exist - shows all"
+                    },
+                    {
+                        "in": "query",
+                        "name": "category_id",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Filters by category ID. If not defined - shows all"
+                    },
+                    {
+                        "in": "query",
+                        "name": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Filters by product name (partial or full). If not defined - shows all"
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "default": 1
+                        },
+                        "description": "Pagination page. If not defined - pagination disabled."
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "default":20
+                        },
+                        "description": "Pagination objects per page. If not defined - pagination disabled."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operation successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductsResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error in request parameters"
+                    }
+                }
+            }
+        },
+        "/products/categories": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Product categories",
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operation successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductCategoriesResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/diaries/{date}": {
+            "get": {
+                "tags": [
+                    "Diaries"
+                ],
+                "summary": "User`s diary by date",
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "date",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        },
+                        "description": "Date of user's diary records"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operation successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DiariesResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/diaries/meals/{date}": {
+            "get": {
+                "tags": [
+                    "Diaries"
+                ],
+                "summary": "User`s meals by date",
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "date",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        },
+                        "description": "Date of user's meal records"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operation successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MealsResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/diaries/meals/{_id}": {
+            "delete": {
+                "tags": [
+                    "Diaries"
+                ],
+                "summary": "Delete user`s meal by id",
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Meal's Id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operation successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MealResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/diaries/meals": {
+            "post": {
+                "tags": [
+                    "Diaries"
+                ],
+                "summary": "Add user's meal by date",
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Meal object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddMealRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Operation successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MealResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Diaries"
+                ],
+                "summary": "Update user's meal by meal Id",
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Meal object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateMealRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Operation successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MealResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/diaries/workouts/{date}": {
+            "get": {
+                "tags": [
+                    "Diaries"
+                ],
+                "summary": "User`s workouts by date",
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "date",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        },
+                        "description": "Date of user's workout records"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operation successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WorkoutsResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/diaries/workouts/{_id}": {
+            "delete": {
+                "tags": [
+                    "Diaries"
+                ],
+                "summary": "Delete user`s workout by id",
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Workout's Id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operation successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WorkoutResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/diaries/workouts": {
+            "post": {
+                "tags": [
+                    "Diaries"
+                ],
+                "summary": "Add user's workout by date",
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Workout object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddWorkoutRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Operation successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WorkoutResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Diaries"
+                ],
+                "summary": "Update user's workout by workout Id",
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Workout object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateWorkoutRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Operation successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WorkoutResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/users": {
+            "patch": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Update user's name",
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "User's update object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateUserRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Operation successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UpdateUserResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/users/avatars": {
+            "patch": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Update user's avatar",
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "User's avatar file",
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateUserAvatarRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Operation successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UpdateUserAvatarResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/profiles": {
+            "get": {
+                "tags": [
+                    "Profiles"
+                ],
+                "summary": "User's profile",
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operation successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserSportProfileResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Profiles"
+                ],
+                "summary": "User's profile",
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Profile object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserSportProfileRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Operation successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserSportProfileResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/profiles/targets": {
+            "get": {
+                "tags": [
+                    "Profiles"
+                ],
+                "summary": "User's traning targets",
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operation successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserTargetsResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/exercises": {
+            "get": {
+                "tags": [
+                    "Exercises"
+                ],
+                "summary": "Filtered exersices list",
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "filter",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Category filter"
+                    },
+                    {
+                        "in": "query",
+                        "name": "name",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Category name"
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "default":1
+                        },
+                        "description": "Pagination page. If not defined - pagination disabled."
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "default":20
+                        },
+                        "description": "Pagination objects per page. If not defined - pagination disabled."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operation successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ExercisesResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/exercises/groups/{filter}": {
+            "get": {
+                "tags": [
+                    "Exercises"
+                ],
+                "summary": "Grouped categories",
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "filter",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "bodyparts",
+                                "muscles",
+                                "equipment"
+                            ]
+                        },
+                        "description": "Prefilter parameter"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operation successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ExercisesResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/statistics": {
+            "get": {
+                "tags": [
+                    "Statistics"
+                ],
+                "summary": "Basic statistic",
+                "responses": {
+                    "200": {
+                        "description": "Operation successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BasicStatisticResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ReistrationRequest": {
+                "type": "object",
+                "required": [
+                    "name",
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "User's display name",
+                        "example": "Darth Vader"
+                    },
+                    "email": {
+                        "type": "string",
+                        "description": "User's email",
+                        "pattern": "/^[\\w-.]+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$/",
+                        "example": "anakin@deathstar.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "User's password",
+                        "minLength": 6,
+                        "maxLength": 24
+                    }
+                }
+            },
+            "RegistrationResponse": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "User's display name",
+                        "example": "Darth Vader"
+                    },
+                    "email": {
+                        "type": "string",
+                        "description": "User's email",
+                        "pattern": "/^[\\w-.]+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$/",
+                        "example": "anakin@deathstar.com"
+                    },
+                    "avatarURL": {
+                        "type": "string",
+                        "description": "User's avatar Url",
+                        "format": "url"
+                    }
+                }
+            },
+            "VerificationRequest": {
+                "type": "object",
+                "required": [
+                    "email"
+                ],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "description": "User's email",
+                        "pattern": "/^[\\w-.]+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$/",
+                        "example": "anakin@deathstar.com"
+                    }
+                }
+            },
+            "PasswordRestoreRequest": {
+                "type": "object",
+                "required": [
+                    "email"
+                ],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "required": true,
+                        "description": "User's email",
+                        "pattern": "/^[\\w-.]+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$/",
+                        "example": "anakin@deathstar.com"
+                    }
+                }
+            },
+            "PasswordRestoreResponse": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "description": "Restore token"
+                    }
+                }
+            },
+            "UpdatePasswordRequest": {
+                "type": "object",
+                "required": [
+                    "token",
+                    "password"
+                ],
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "description": "Restore token"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "New password",
+                        "minLength": 6,
+                        "maxLength": 24
+                    }
+                }
+            },
+            "LoginRequest": {
+                "type": "object",
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "required": true,
+                        "description": "User's email",
+                        "pattern": "/^[\\w-.]+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$/",
+                        "example": "anakin@deathstar.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "New password",
+                        "minLength": 6,
+                        "maxLength": 24
+                    }
+                }
+            },
+            "LoginResponse": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "required": true,
+                        "description": "User's authentitication token"
+                    },
+                    "user": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "description": "User's display name",
+                                "example": "Darth Vader"
+                            },
+                            "email": {
+                                "type": "string",
+                                "required": true,
+                                "description": "User's email",
+                                "pattern": "/^[\\w-.]+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$/",
+                                "example": "anakin@deathstar.com"
+                            },
+                            "aratarURL": {
+                                "type": "string",
+                                "description": "User's avatar",
+                                "format": "uri"
+                            },
+                            "createdAt": {
+                                "type":"string",
+                                "description": "Date of creation",
+                                "format": "date"
+                            }
+                        }
+                    }
+                }
+            },
+            "CurrentUserResponse": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "User's display name",
+                        "example": "Darth Vader"
+                    },
+                    "email": {
+                        "type": "string",
+                        "required": true,
+                        "description": "User's email",
+                        "pattern": "/^[\\w-.]+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$/",
+                        "example": "anakin@deathstar.com"
+                    },
+                    "aratarURL": {
+                        "type": "string",
+                        "description": "User's avatar",
+                        "format": "uri"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "description": "Date of creation",
+                        "format": "date"
+                    }
+                }
+            },
+            "ProductsResponse": {
+                "type": "object",
+                "properties": {
+                    "total": {
+                        "type": "integer"
+                    },
+                    "data": {
+                        "type": "array",
+                        "description": "Total count of elements in filtered collection",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "groupBloodNotAllowed": {
+                                    "type": "object",
+                                    "properties": {
+                                        "1": {
+                                            "type": "boolean"
+                                        },
+                                        "2": {
+                                            "type": "boolean"
+                                        },
+                                        "3": {
+                                            "type": "boolean"
+                                        },
+                                        "4": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "_id": {
+                                    "type": "string"
+                                },
+                                "weight": {
+                                    "type": "integer",
+                                    "minimum": 1
+                                },
+                                "calories": {
+                                    "type": "integer",
+                                    "minimum": 1
+                                },
+                                "category": {
+                                    "type": "object",
+                                    "properties": {
+                                        "_id": {
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "title": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "ProductCategoriesResponse": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    }
+                }
+            },
+            "DiariesResponse": {
+                "type": "object",
+                "properties": {
+                    "workouts": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/WorkoutResponse"
+                        }
+                    },
+                    "meals": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/MealResponse"
+                        }
+                    }
+                }
+            },
+            "WorkoutResponse": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "string"
+                    },
+                    "owner_id": {
+                        "type": "string"
+                    },
+                    "time": {
+                        "type": "number"
+                    },
+                    "burnedCalories": {
+                        "type": "number"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "exercise_id": {
+                        "type": "object",
+                        "properties": {
+                            "_id": {
+                                "type": "string"
+                            },
+                            "bodyPart": {
+                                "type": "string"
+                            },
+                            "equipment": {
+                                "type": "string"
+                            },
+                            "gifUrl": {
+                                "type": "string",
+                                "format": "uri"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "target": {
+                                "type": "string"
+                            },
+                            "burnedCalories": {
+                                "type": "integer"
+                            },
+                            "time": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                }
+            },
+            "WorkoutsResponse": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/WorkoutResponse"
+                }
+            },
+            "MealResponse": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "string"
+                    },
+                    "owner_id": {
+                        "type": "string"
+                    },
+                    "weight": {
+                        "type": "integer"
+                    },
+                    "calories": {
+                        "type": "integer"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "product_id": {
+                        "type": "object",
+                        "properties": {
+                            "_id": {
+                                "type": "string"
+                            },
+                            "category": {
+                                "type": "string",
+                                "description": "Product category Id"
+                            },
+                            "weight": {
+                                "type": "integer"
+                            },
+                            "calories": {
+                                "type": "integer"
+                            },
+                            "title": {
+                                "type": "string"
+                            },
+                            "groupBloodNotAllowed": {
+                                "type": "object",
+                                "properties": {
+                                    "1": {
+                                        "type": "boolean"
+                                    },
+                                    "2": {
+                                        "type": "boolean"
+                                    },
+                                    "3": {
+                                        "type": "boolean"
+                                    },
+                                    "4": {
+                                        "type": "boolean"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "MealsResponse": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/MealResponse"
+                }
+            },
+            "AddMealRequest": {
+                "type": "object",
+                "required": [
+                    "product_id",
+                    "weight",
+                    "date"
+                ],
+                "properties": {
+                    "product_id": {
+                        "type": "string"
+                    },
+                    "weight": {
+                        "type": "integer",
+                        "description": "Actual product weight",
+                        "minimum": 0,
+                        "exclusiveMinimum": true,
+                        "maximum": 700
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date"
+                    }
+                }
+            },
+            "UpdateMealRequest": {
+                "type": "object",
+                "required": [
+                    "_id",
+                    "weight"
+                ],
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "description": "Meal record Id"
+                    },
+                    "weight": {
+                        "type": "integer",
+                        "description": "Actual product weight",
+                        "minimum": 0,
+                        "exclusiveMinimum": true,
+                        "maximum": 700
+                    }
+                }
+            },
+            "AddWorkoutRequest": {
+                "type": "object",
+                "required": [
+                    "product_id",
+                    "weight",
+                    "date"
+                ],
+                "properties": {
+                    "exercise_id": {
+                        "type": "string"
+                    },
+                    "time": {
+                        "type": "number",
+                        "description": "Actual exercise duration",
+                        "minimum": 0,
+                        "exclusiveMinimum": true,
+                        "maximum": 120
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date"
+                    }
+                }
+            },
+            "UpdateWorkoutRequest": {
+                "type": "object",
+                "required": [
+                    "_id",
+                    "time"
+                ],
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "description": "Workout record Id"
+                    },
+                    "time": {
+                        "type": "integer",
+                        "description": "Actual exercise duration",
+                        "minimum": 0,
+                        "exclusiveMinimum": true,
+                        "maximum": 120
+                    }
+                }
+            },
+            "UpdateUserRequest": {
+                "type": "object",
+                "required": [
+                    "name"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "User's display name"
+                    }
+                }
+            },
+            "UpdateUserResponse": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "User's display name",
+                        "example": "Darth Vader"
+                    },
+                    "email": {
+                        "type": "string",
+                        "required": true,
+                        "description": "User's email",
+                        "pattern": "/^[\\w-.]+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$/",
+                        "example": "anakin@deathstar.com"
+                    },
+                    "aratarURL": {
+                        "type": "string",
+                        "description": "User's avatar",
+                        "format": "uri"
+                    }
+                }
+            },
+            "UpdateUserAvatarRequest": {
+                "type": "object",
+                "properties": {
+                    "avatar": {
+                        "type": "string",
+                        "format": "binary"
+                    }
+                }
+            },
+            "UpdateUserAvatarResponse": {
+                "type": "object",
+                "properties": {
+                    "avatarURL": {
+                        "type": "string",
+                        "format": "uri"
+                    }
+                }
+            },
+            "UserSportProfileRequest": {
+                "type": "object",
+                "required": [
+                    "height",
+                    "currentWeight",
+                    "desiredWeight",
+                    "sex",
+                    "blood",
+                    "levelActivity",
+                    "birthday"
+                ],
+                "properties": {
+                    "height": {
+                        "type": "integer",
+                        "description": "User's height",
+                        "minimum": 150,
+                        "maximum": 250
+                    },
+                    "currentWeight": {
+                        "type": "integer",
+                        "description": "User's weight",
+                        "minimum": 35,
+                        "maximum": 250
+                    },
+                    "desiredWeight": {
+                        "type": "integer",
+                        "description": "User's target weihgt",
+                        "minimum": 35,
+                        "maximum": 200
+                    },
+                    "sex": {
+                        "type": "string",
+                        "description": "User's gender",
+                        "enum": [
+                            "male",
+                            "female"
+                        ]
+                    },
+                    "blood": {
+                        "type": "integer",
+                        "description": "User's blood type",
+                        "enum": [
+                            1,
+                            2,
+                            3,
+                            4
+                        ]
+                    },
+                    "levelActivity": {
+                        "type": "integer",
+                        "description": "User's blood type",
+                        "enum": [
+                            1,
+                            2,
+                            3,
+                            4,
+                            5
+                        ]
+                    },
+                    "birthday": {
+                        "type": "string",
+                        "description": "User's birthday",
+                        "format": "date"
+                    }
+                }
+            },
+            "UserSportProfileResponse": {
+                "anyOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "_id": {
+                                "type": "string"
+                            },
+                            "height": {
+                                "type": "integer",
+                                "description": "User's height"
+                            },
+                            "currentWeight": {
+                                "type": "integer",
+                                "description": "User's weight"
+                            },
+                            "desiredWeight": {
+                                "type": "integer",
+                                "description": "User's target weihgt"
+                            },
+                            "sex": {
+                                "type": "string",
+                                "description": "User's gender",
+                                "enum": [
+                                    "male",
+                                    "female"
+                                ]
+                            },
+                            "blood": {
+                                "type": "integer",
+                                "description": "User's blood type",
+                                "enum": [
+                                    1,
+                                    2,
+                                    3,
+                                    4
+                                ]
+                            },
+                            "levelActivity": {
+                                "type": "integer",
+                                "description": "User's blood type",
+                                "enum": [
+                                    1,
+                                    2,
+                                    3,
+                                    4,
+                                    5
+                                ]
+                            },
+                            "birthday": {
+                                "type": "string",
+                                "description": "User's birthday",
+                                "format": "date"
+                            },
+                            "owner": {
+                                "type": "object",
+                                "$ref": "#/components/schemas/UpdateUserResponse"
+                            }
+                        }
+                    },
+                    {
+                        "type": "null"
+                    }
+                ]
+            },
+            "UserTargetsResponse": {
+                "type": "object",
+                "properties": {
+                    "targetBmr": {
+                        "type": "number",
+                        "description": "User's target BMR"
+                    },
+                    "targetTime": {
+                        "type": "number",
+                        "description": "User's target traning time"
+                    }
+                }
+            },
+            "ExercisesResponse": {
+                "type": "object",
+                "description": "Total count of elements in filtered collection",
+                "properties": {
+                    "total": {
+                        "type": "integer"
+                    },
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "_id": {
+                                    "type": "string"
+                                },
+                                "bodyPart": {
+                                    "type": "string"
+                                },
+                                "equipment": {
+                                    "type": "string"
+                                },
+                                "gifUrl": {
+                                    "type": "string",
+                                    "format": "uri"
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "target": {
+                                    "type": "string"
+                                },
+                                "burnedCalories": {
+                                    "type": "integer"
+                                },
+                                "time": {
+                                    "type": "integer"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "ExercisesCategoriesResponse": {
+                "type": "object",
+                "properties": {
+                    "keys": {
+                        "type": "object",
+                        "description": "Categories filter endpoints",
+                        "properties": {
+                            "filter": {
+                                "type": "string",
+                                "description": "Category filter group"
+                            },
+                            "field": {
+                                "type": "string",
+                                "description": "Types field by category filter"
+                            }
+                        }
+                    }
+                }
+            },
+            "BasicStatisticResponse": {
+                "type": "object",
+                "properties": {
+                    "userCount": {
+                        "type": "integer"
+                    },
+                    "workoutCount": {
+                        "type": "integer"
+                    },
+                    "burnedCaloriesSum": {
+                        "type": "number"
+                    },
+                    "workoutsTimeSum": {
+                        "type": "number"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "Bearer": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
+}
