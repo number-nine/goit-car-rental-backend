@@ -1,19 +1,10 @@
 const validateBody = require("./validateBody");
-const isValidProduct = require("./isValidProduct");
-const isValidExercise = require("./isValidExercise");
-const authenticate = require("./authenticate");
 const validateParams = require("./validateParams");
-const normalizeDateInParam = require("./normalizeDateInParam");
-const normalizeDateInBody = require("./normalizeDateInBody");
-const upload = require("./upload");
+const validateQuery = require("./validateQuery");
+
 
 module.exports = {
   validateBody,
-  authenticate,
-  isValidProduct,
-  isValidExercise,
   validateParams,
-  normalizeDateInBody,
-  normalizeDateInParam,
-  upload,
+  validateQuery,
 };

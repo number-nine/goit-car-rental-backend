@@ -1,17 +1,15 @@
 const express = require("express");
 const advertCtrl = require("../../controllers/adverts");
-const filterCtrl = require("../../controllers/filters");
 
-// const { } = require("../../middlewares");
+const { validateQuery } = require("../../middlewares");
+const { schemas } = require("../../models/advert");
 
 const router = express.Router();
 
-
 router.get(
   "/",
+  validateQuery(schemas.queryFilters),
   advertCtrl.getFilteredAdverts
 );
-
-router.get("/filters", filterCtrl.getFilters);
 
 module.exports = router;

@@ -6,6 +6,8 @@ const swaggerDocument = require("./swagger.json");
 const { HttpError } = require("./helpers");
 
 const advertRouter = require("./routes/api/adverts");
+const filterRouter = require("./routes/api/filters");
+const favoriteRouter = require("./routes/api/favorites");
 
 const app = express();
 
@@ -16,6 +18,8 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/adverts", advertRouter);
+app.use("/api/filters", filterRouter);
+app.use("/api/favorites", favoriteRouter);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 

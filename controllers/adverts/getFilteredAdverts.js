@@ -1,24 +1,53 @@
 const { ctrlWrapper } = require("../../helpers");
 const { Advert } = require("../../models/advert");
 
-
 const getFilteredAdverts = async (req, res) => {
-  // const { filter, name, page, limit } = req.query;
-  // const findFilter = {};
-  // let result = [];
-  // let total = 0;
+  const LIMIT = 12;
+  const {
+    rentalPrice,
+    mileageFrom,
+    mileageTo,
+    page = 1,
+  } = req.query;
+  const findFilter = {};
 
-  // const category = Object.keys(endpoints).find(
-  //   (endpoint) => endpoints[endpoint].filter === filter
-  // );
-  // if (category) {
-  //   findFilter[endpoints[category].field] = name;
-  // }
+  if (rentalPrice) findFilter.rentalPrice = { $lte: Number(rentalPrice) } ;
 
-  // result = await Exercise.find(findFilter, {}, paginationParams(page, limit));
+  if (mileageFrom) findFilter.mileage = { $gte: Number(mileageFrom) };
 
-  // total = await Exercise.countDocuments(findFilter);
-  const result = await Advert.find({})
+  if (mileageTo) findFilter.mileage =  { ...findFilter.mileage, $lte: mileageTo };
+
+  console.log({...findFilter});
+  const result = (
+    await Advert.aggregate([
+      {
+        $match: {...findFilter},
+      },
+      {
+        $lookup: {
+          from: "favorites",
+          localField: "_id",
+          foreignField: "vehicle_id",
+          as: "isFavorite",
+        },
+      },
+      {
+        $set: {
+          isFavorite: { $gt: [{ $size: "$isFavorite" }, 0] },
+        },
+      },
+      {
+        $facet: {
+          metadata: [{ $count: "total" }, { $addFields: { page: page } }],
+          data: [{ $skip: LIMIT * (page - 1) }, { $limit: LIMIT }],
+        },
+      },
+    ])
+  )[0];
+
+  if (result.metadata.length === 0) {
+    result.metadata = { total: 0, page };
+  }
 
   res.json(result);
 };

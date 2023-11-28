@@ -1,4 +1,5 @@
 const { Schema, model } = require("mongoose");
+const Joi = require("joi");
 
 const advertSchema = new Schema(
   {
@@ -67,10 +68,20 @@ const advertSchema = new Schema(
 );
 
 
-
 const Advert = model("advert", advertSchema);
 
+const queryFilters = Joi.object({
+  rentalPrice: Joi.number().greater(0),
+  mileageFrom: Joi.number().greater(0),
+  mileageTo: Joi.number().greater(0),
+  page: Joi.number().greater(0),
+});
+
+const schemas = {
+  queryFilters,
+};
 
 module.exports = {
+  schemas,
   Advert,
 };
