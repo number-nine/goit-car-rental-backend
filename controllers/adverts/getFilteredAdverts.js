@@ -3,25 +3,23 @@ const { Advert } = require("../../models/advert");
 
 const getFilteredAdverts = async (req, res) => {
   const LIMIT = 12;
-  const {
-    rentalPrice,
-    mileageFrom,
-    mileageTo,
-    page = 1,
-  } = req.query;
+  const { make, rentalPrice, mileageFrom, mileageTo, page = 1 } = req.query;
   const findFilter = {};
 
-  if (rentalPrice) findFilter.rentalPrice = { $lte: Number(rentalPrice) } ;
+  if (make) findFilter.make = make;
+
+  if (rentalPrice) findFilter.rentalPrice = { $lte: Number(rentalPrice) };
 
   if (mileageFrom) findFilter.mileage = { $gte: Number(mileageFrom) };
 
-  if (mileageTo) findFilter.mileage =  { ...findFilter.mileage, $lte: mileageTo };
+  if (mileageTo)
+    findFilter.mileage = { ...findFilter.mileage, $lte: Number(mileageTo) };
 
-  console.log({...findFilter});
+  console.log({ ...findFilter });
   const result = (
     await Advert.aggregate([
       {
-        $match: {...findFilter},
+        $match: { ...findFilter },
       },
       {
         $lookup: {
