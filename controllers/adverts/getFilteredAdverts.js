@@ -46,7 +46,7 @@ const getFilteredAdverts = async (req, res) => {
   )[0];
 
   if (result.metadata.length === 0) {
-    result.metadata = { total: 0, page };
+    result.metadata = [{ total: 0, page }];
   }
 
   res.json(result);
