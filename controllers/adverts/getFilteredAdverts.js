@@ -36,7 +36,7 @@ const getFilteredAdverts = async (req, res) => {
       },
       {
         $facet: {
-          metadata: [{ $count: "total" }, { $addFields: { page: page } }],
+          metadata: [{ $count: "total" }, { $addFields: { page: Number(page) } }],
           data: [{ $skip: LIMIT * (page - 1) }, { $limit: LIMIT }],
         },
       },
