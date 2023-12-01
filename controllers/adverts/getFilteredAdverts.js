@@ -15,7 +15,6 @@ const getFilteredAdverts = async (req, res) => {
   if (mileageTo)
     findFilter.mileage = { ...findFilter.mileage, $lte: Number(mileageTo) };
 
-  console.log({ ...findFilter });
   const result = (
     await Advert.aggregate([
       {
@@ -36,7 +35,10 @@ const getFilteredAdverts = async (req, res) => {
       },
       {
         $facet: {
-          metadata: [{ $count: "total" }, { $addFields: { page: Number(page) } }],
+          metadata: [
+            { $count: "total" },
+            { $addFields: { page: Number(page) } },
+          ],
           data: [{ $skip: LIMIT * (page - 1) }, { $limit: LIMIT }],
         },
       },
