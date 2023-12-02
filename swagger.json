@@ -33,7 +33,6 @@
             "name": "Favorites",
             "description": "Favorite vehicles endpoints"
         }
-       
     ],
     "paths": {
         "/adverts": {
@@ -85,7 +84,6 @@
                         },
                         "description": "Pagination page (12 items per page). If not defined - shows 1st page."
                     }
-                    
                 ],
                 "responses": {
                     "200": {
@@ -130,7 +128,6 @@
                     "Favorites"
                 ],
                 "summary": "Favorite vehicles list",
-
                 "responses": {
                     "200": {
                         "description": "Operation successful",
@@ -217,651 +214,178 @@
     },
     "components": {
         "schemas": {
-            "VerificationRequest": {
-                "type": "object",
-                "required": [
-                    "email"
-                ],
-                "properties": {
-                    "email": {
-                        "type": "string",
-                        "description": "User's email",
-                        "pattern": "/^[\\w-.]+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$/",
-                        "example": "anakin@deathstar.com"
-                    }
-                }
-            },
-            "PasswordRestoreRequest": {
-                "type": "object",
-                "required": [
-                    "email"
-                ],
-                "properties": {
-                    "email": {
-                        "type": "string",
-                        "required": true,
-                        "description": "User's email",
-                        "pattern": "/^[\\w-.]+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$/",
-                        "example": "anakin@deathstar.com"
-                    }
-                }
-            },
-            "PasswordRestoreResponse": {
+            "VehicleRaw": {
                 "type": "object",
                 "properties": {
-                    "token": {
-                        "type": "string",
-                        "description": "Restore token"
-                    }
-                }
-            },
-            "UpdatePasswordRequest": {
-                "type": "object",
-                "required": [
-                    "token",
-                    "password"
-                ],
-                "properties": {
-                    "token": {
-                        "type": "string",
-                        "description": "Restore token"
+                    "_id": {
+                        "type": "string"
                     },
-                    "password": {
-                        "type": "string",
-                        "description": "New password",
-                        "minLength": 6,
-                        "maxLength": 24
-                    }
-                }
-            },
-            "LoginRequest": {
-                "type": "object",
-                "required": [
-                    "email",
-                    "password"
-                ],
-                "properties": {
-                    "email": {
-                        "type": "string",
-                        "required": true,
-                        "description": "User's email",
-                        "pattern": "/^[\\w-.]+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$/",
-                        "example": "anakin@deathstar.com"
+                    "year": {
+                        "type": "integer"
                     },
-                    "password": {
-                        "type": "string",
-                        "description": "New password",
-                        "minLength": 6,
-                        "maxLength": 24
-                    }
-                }
-            },
-            "LoginResponse": {
-                "type": "object",
-                "properties": {
-                    "token": {
-                        "type": "string",
-                        "required": true,
-                        "description": "User's authentitication token"
+                    "make": {
+                        "type": "string"
                     },
-                    "user": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "type": "string",
-                                "description": "User's display name",
-                                "example": "Darth Vader"
-                            },
-                            "email": {
-                                "type": "string",
-                                "required": true,
-                                "description": "User's email",
-                                "pattern": "/^[\\w-.]+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$/",
-                                "example": "anakin@deathstar.com"
-                            },
-                            "aratarURL": {
-                                "type": "string",
-                                "description": "User's avatar",
-                                "format": "uri"
-                            },
-                            "createdAt": {
-                                "type":"string",
-                                "description": "Date of creation",
-                                "format": "date"
-                            }
+                    "model": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    },
+                    "photoLink": {
+                        "type": "string",
+                        "format": "uri"
+                    },
+                    "img": {
+                        "type": "string",
+                        "format": "uri"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "fuelConsumption": {
+                        "type": "string"
+                    },
+                    "engineSize": {
+                        "type": "string"
+                    },
+                    "rentalCompany": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "rentalConditions": {
+                        "type": "string"
+                    },
+                    "mileage": {
+                        "type": "number"
+                    },
+                    "rentalPrice": {
+                        "type": "number"
+                    },
+                    "accessories": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "functionalities": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
                         }
                     }
                 }
             },
-            "CurrentUserResponse": {
+            "VehicleExtended": {
                 "type": "object",
                 "properties": {
-                    "name": {
-                        "type": "string",
-                        "description": "User's display name",
-                        "example": "Darth Vader"
+                    "_id": {
+                        "type": "string"
                     },
-                    "email": {
-                        "type": "string",
-                        "required": true,
-                        "description": "User's email",
-                        "pattern": "/^[\\w-.]+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$/",
-                        "example": "anakin@deathstar.com"
+                    "year": {
+                        "type": "integer"
                     },
-                    "aratarURL": {
+                    "make": {
+                        "type": "string"
+                    },
+                    "model": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    },
+                    "photoLink": {
                         "type": "string",
-                        "description": "User's avatar",
                         "format": "uri"
                     },
-                    "createdAt": {
+                    "img": {
                         "type": "string",
-                        "description": "Date of creation",
-                        "format": "date"
+                        "format": "uri"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "fuelConsumption": {
+                        "type": "string"
+                    },
+                    "engineSize": {
+                        "type": "string"
+                    },
+                    "rentalCompany": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "rentalConditions": {
+                        "type": "string"
+                    },
+                    "mileage": {
+                        "type": "number"
+                    },
+                    "rentalPrice": {
+                        "type": "number"
+                    },
+                    "isFavorite": {
+                        "type": "boolean"
+                    },
+                    "accessories": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "functionalities": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
-            "ProductsResponse": {
+            "AdvertsResponse": {
                 "type": "object",
                 "properties": {
-                    "total": {
-                        "type": "integer"
-                    },
-                    "data": {
+                    "metadata": {
                         "type": "array",
-                        "description": "Total count of elements in filtered collection",
                         "items": {
                             "type": "object",
                             "properties": {
-                                "groupBloodNotAllowed": {
-                                    "type": "object",
-                                    "properties": {
-                                        "1": {
-                                            "type": "boolean"
-                                        },
-                                        "2": {
-                                            "type": "boolean"
-                                        },
-                                        "3": {
-                                            "type": "boolean"
-                                        },
-                                        "4": {
-                                            "type": "boolean"
-                                        }
-                                    }
+                                "total": {
+                                    "type": "integer"
                                 },
-                                "_id": {
-                                    "type": "string"
-                                },
-                                "weight": {
-                                    "type": "integer",
-                                    "minimum": 1
-                                },
-                                "calories": {
-                                    "type": "integer",
-                                    "minimum": 1
-                                },
-                                "category": {
-                                    "type": "object",
-                                    "properties": {
-                                        "_id": {
-                                            "type": "string"
-                                        },
-                                        "name": {
-                                            "type": "string"
-                                        }
-                                    }
-                                },
-                                "title": {
-                                    "type": "string"
+                                "page": {
+                                    "type": "integer"
                                 }
                             }
                         }
-                    }
-                }
-            },
-            "ProductCategoriesResponse": {
-                "type": "object",
-                "properties": {
-                    "_id": {
-                        "type": "string"
                     },
-                    "name": {
-                        "type": "string"
-                    }
-                }
-            },
-            "DiariesResponse": {
-                "type": "object",
-                "properties": {
-                    "workouts": {
+                    "data": {
                         "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/WorkoutResponse"
+                            "$ref": "#/components/schemas/VehicleExtended"
                         }
-                    },
-                    "meals": {
+                    }
+                }
+            },
+            "FavoritesListResponse": {
+                "type": "object",
+                "properties": {
+                    "metadata": {
                         "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/MealResponse"
-                        }
-                    }
-                }
-            },
-            "WorkoutResponse": {
-                "type": "object",
-                "properties": {
-                    "_id": {
-                        "type": "string"
-                    },
-                    "owner_id": {
-                        "type": "string"
-                    },
-                    "time": {
-                        "type": "number"
-                    },
-                    "burnedCalories": {
-                        "type": "number"
-                    },
-                    "date": {
-                        "type": "string",
-                        "format": "date"
-                    },
-                    "exercise_id": {
-                        "type": "object",
-                        "properties": {
-                            "_id": {
-                                "type": "string"
-                            },
-                            "bodyPart": {
-                                "type": "string"
-                            },
-                            "equipment": {
-                                "type": "string"
-                            },
-                            "gifUrl": {
-                                "type": "string",
-                                "format": "uri"
-                            },
-                            "name": {
-                                "type": "string"
-                            },
-                            "target": {
-                                "type": "string"
-                            },
-                            "burnedCalories": {
-                                "type": "integer"
-                            },
-                            "time": {
-                                "type": "integer"
-                            }
-                        }
-                    }
-                }
-            },
-            "WorkoutsResponse": {
-                "type": "array",
-                "items": {
-                    "$ref": "#/components/schemas/WorkoutResponse"
-                }
-            },
-            "MealResponse": {
-                "type": "object",
-                "properties": {
-                    "_id": {
-                        "type": "string"
-                    },
-                    "owner_id": {
-                        "type": "string"
-                    },
-                    "weight": {
-                        "type": "integer"
-                    },
-                    "calories": {
-                        "type": "integer"
-                    },
-                    "date": {
-                        "type": "string",
-                        "format": "date"
-                    },
-                    "product_id": {
-                        "type": "object",
-                        "properties": {
-                            "_id": {
-                                "type": "string"
-                            },
-                            "category": {
-                                "type": "string",
-                                "description": "Product category Id"
-                            },
-                            "weight": {
-                                "type": "integer"
-                            },
-                            "calories": {
-                                "type": "integer"
-                            },
-                            "title": {
-                                "type": "string"
-                            },
-                            "groupBloodNotAllowed": {
-                                "type": "object",
-                                "properties": {
-                                    "1": {
-                                        "type": "boolean"
-                                    },
-                                    "2": {
-                                        "type": "boolean"
-                                    },
-                                    "3": {
-                                        "type": "boolean"
-                                    },
-                                    "4": {
-                                        "type": "boolean"
-                                    }
+                            "type": "object",
+                            "properties": {
+                                "total": {
+                                    "type": "integer"
+                                },
+                                "page": {
+                                    "type": "integer"
                                 }
                             }
                         }
-                    }
-                }
-            },
-            "MealsResponse": {
-                "type": "array",
-                "items": {
-                    "$ref": "#/components/schemas/MealResponse"
-                }
-            },
-            "AddMealRequest": {
-                "type": "object",
-                "required": [
-                    "product_id",
-                    "weight",
-                    "date"
-                ],
-                "properties": {
-                    "product_id": {
-                        "type": "string"
-                    },
-                    "weight": {
-                        "type": "integer",
-                        "description": "Actual product weight",
-                        "minimum": 0,
-                        "exclusiveMinimum": true,
-                        "maximum": 700
-                    },
-                    "date": {
-                        "type": "string",
-                        "format": "date"
-                    }
-                }
-            },
-            "UpdateMealRequest": {
-                "type": "object",
-                "required": [
-                    "_id",
-                    "weight"
-                ],
-                "properties": {
-                    "_id": {
-                        "type": "string",
-                        "description": "Meal record Id"
-                    },
-                    "weight": {
-                        "type": "integer",
-                        "description": "Actual product weight",
-                        "minimum": 0,
-                        "exclusiveMinimum": true,
-                        "maximum": 700
-                    }
-                }
-            },
-            "AddWorkoutRequest": {
-                "type": "object",
-                "required": [
-                    "product_id",
-                    "weight",
-                    "date"
-                ],
-                "properties": {
-                    "exercise_id": {
-                        "type": "string"
-                    },
-                    "time": {
-                        "type": "number",
-                        "description": "Actual exercise duration",
-                        "minimum": 0,
-                        "exclusiveMinimum": true,
-                        "maximum": 120
-                    },
-                    "date": {
-                        "type": "string",
-                        "format": "date"
-                    }
-                }
-            },
-            "UpdateWorkoutRequest": {
-                "type": "object",
-                "required": [
-                    "_id",
-                    "time"
-                ],
-                "properties": {
-                    "_id": {
-                        "type": "string",
-                        "description": "Workout record Id"
-                    },
-                    "time": {
-                        "type": "integer",
-                        "description": "Actual exercise duration",
-                        "minimum": 0,
-                        "exclusiveMinimum": true,
-                        "maximum": 120
-                    }
-                }
-            },
-            "UpdateUserRequest": {
-                "type": "object",
-                "required": [
-                    "name"
-                ],
-                "properties": {
-                    "name": {
-                        "type": "string",
-                        "description": "User's display name"
-                    }
-                }
-            },
-            "UpdateUserResponse": {
-                "type": "object",
-                "properties": {
-                    "_id": {
-                        "type": "string"
-                    },
-                    "name": {
-                        "type": "string",
-                        "description": "User's display name",
-                        "example": "Darth Vader"
-                    },
-                    "email": {
-                        "type": "string",
-                        "required": true,
-                        "description": "User's email",
-                        "pattern": "/^[\\w-.]+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$/",
-                        "example": "anakin@deathstar.com"
-                    },
-                    "aratarURL": {
-                        "type": "string",
-                        "description": "User's avatar",
-                        "format": "uri"
-                    }
-                }
-            },
-            "UpdateUserAvatarRequest": {
-                "type": "object",
-                "properties": {
-                    "avatar": {
-                        "type": "string",
-                        "format": "binary"
-                    }
-                }
-            },
-            "UpdateUserAvatarResponse": {
-                "type": "object",
-                "properties": {
-                    "avatarURL": {
-                        "type": "string",
-                        "format": "uri"
-                    }
-                }
-            },
-            "UserSportProfileRequest": {
-                "type": "object",
-                "required": [
-                    "height",
-                    "currentWeight",
-                    "desiredWeight",
-                    "sex",
-                    "blood",
-                    "levelActivity",
-                    "birthday"
-                ],
-                "properties": {
-                    "height": {
-                        "type": "integer",
-                        "description": "User's height",
-                        "minimum": 150,
-                        "maximum": 250
-                    },
-                    "currentWeight": {
-                        "type": "integer",
-                        "description": "User's weight",
-                        "minimum": 35,
-                        "maximum": 250
-                    },
-                    "desiredWeight": {
-                        "type": "integer",
-                        "description": "User's target weihgt",
-                        "minimum": 35,
-                        "maximum": 200
-                    },
-                    "sex": {
-                        "type": "string",
-                        "description": "User's gender",
-                        "enum": [
-                            "male",
-                            "female"
-                        ]
-                    },
-                    "blood": {
-                        "type": "integer",
-                        "description": "User's blood type",
-                        "enum": [
-                            1,
-                            2,
-                            3,
-                            4
-                        ]
-                    },
-                    "levelActivity": {
-                        "type": "integer",
-                        "description": "User's blood type",
-                        "enum": [
-                            1,
-                            2,
-                            3,
-                            4,
-                            5
-                        ]
-                    },
-                    "birthday": {
-                        "type": "string",
-                        "description": "User's birthday",
-                        "format": "date"
-                    }
-                }
-            },
-            "UserSportProfileResponse": {
-                "anyOf": [
-                    {
-                        "type": "object",
-                        "properties": {
-                            "_id": {
-                                "type": "string"
-                            },
-                            "height": {
-                                "type": "integer",
-                                "description": "User's height"
-                            },
-                            "currentWeight": {
-                                "type": "integer",
-                                "description": "User's weight"
-                            },
-                            "desiredWeight": {
-                                "type": "integer",
-                                "description": "User's target weihgt"
-                            },
-                            "sex": {
-                                "type": "string",
-                                "description": "User's gender",
-                                "enum": [
-                                    "male",
-                                    "female"
-                                ]
-                            },
-                            "blood": {
-                                "type": "integer",
-                                "description": "User's blood type",
-                                "enum": [
-                                    1,
-                                    2,
-                                    3,
-                                    4
-                                ]
-                            },
-                            "levelActivity": {
-                                "type": "integer",
-                                "description": "User's blood type",
-                                "enum": [
-                                    1,
-                                    2,
-                                    3,
-                                    4,
-                                    5
-                                ]
-                            },
-                            "birthday": {
-                                "type": "string",
-                                "description": "User's birthday",
-                                "format": "date"
-                            },
-                            "owner": {
-                                "type": "object",
-                                "$ref": "#/components/schemas/UpdateUserResponse"
-                            }
-                        }
-                    },
-                    {
-                        "type": "null"
-                    }
-                ]
-            },
-            "UserTargetsResponse": {
-                "type": "object",
-                "properties": {
-                    "targetBmr": {
-                        "type": "number",
-                        "description": "User's target BMR"
-                    },
-                    "targetTime": {
-                        "type": "number",
-                        "description": "User's target traning time"
-                    }
-                }
-            },
-            "ExercisesResponse": {
-                "type": "object",
-                "description": "Total count of elements in filtered collection",
-                "properties": {
-                    "total": {
-                        "type": "integer"
                     },
                     "data": {
                         "type": "array",
@@ -871,66 +395,66 @@
                                 "_id": {
                                     "type": "string"
                                 },
-                                "bodyPart": {
+                                "vehicle_id": {
                                     "type": "string"
                                 },
-                                "equipment": {
-                                    "type": "string"
-                                },
-                                "gifUrl": {
-                                    "type": "string",
-                                    "format": "uri"
-                                },
-                                "name": {
-                                    "type": "string"
-                                },
-                                "target": {
-                                    "type": "string"
-                                },
-                                "burnedCalories": {
-                                    "type": "integer"
-                                },
-                                "time": {
-                                    "type": "integer"
+                                "vehicle": {
+                                    "$ref": "#/components/schemas/VehicleExtended"
                                 }
                             }
                         }
                     }
                 }
             },
-            "ExercisesCategoriesResponse": {
+            "AddFavoriteRequest": {
                 "type": "object",
                 "properties": {
-                    "keys": {
-                        "type": "object",
-                        "description": "Categories filter endpoints",
-                        "properties": {
-                            "filter": {
-                                "type": "string",
-                                "description": "Category filter group"
-                            },
-                            "field": {
-                                "type": "string",
-                                "description": "Types field by category filter"
-                            }
-                        }
+                    "id": {
+                        "type": "string"
                     }
                 }
             },
-            "BasicStatisticResponse": {
+            "FavoriteResponse": {
                 "type": "object",
                 "properties": {
-                    "userCount": {
-                        "type": "integer"
+                    "_id": {
+                        "type": "string"
                     },
-                    "workoutCount": {
-                        "type": "integer"
+                    "vehicle_id": {
+                        "$ref": "#/components/schemas/VehicleRaw"
+                    }
+                }
+            },
+            "FiltersResponse":{
+                "type":"object",
+                "properties":{
+                    "makes":{
+                        "type":"array",
+                        "items":{
+                            "type":"string"
+                        }
                     },
-                    "burnedCaloriesSum": {
-                        "type": "number"
+                    "rentalPrice": {
+                        "type":"object",
+                        "properties":{
+                            "max":{
+                                "type":"number"
+                            },
+                            "min": {
+                                "type": "number"
+                            }
+                        }
                     },
-                    "workoutsTimeSum": {
-                        "type": "number"
+                    "mileage": {
+                        "type": "object",
+                        "properties": {
+                            "max": {
+                                "type": "number"
+                            },
+                            "min": {
+                                "type": "number"
+                            }
+                        }
                     }
                 }
             }
