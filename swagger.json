@@ -2,260 +2,78 @@
     "openapi": "3.1.0",
     "info": {
         "version": "1.0.0",
-        "title": "Powerpulse team 5",
-        "description": "Training diary",
+        "title": "GoIT Car Rental App",
+        "description": "Single-user app for car rental",
         "license": {
             "name": "GNU GENERAL PUBLIC LICENSE",
             "url": "https://www.gnu.org/licenses/gpl-3.0.html"
         }
     },
     "consumes": [
-        "application/json",
-        "multipart/form-data"
+        "application/json"
     ],
     "produces": [
         "application/json"
     ],
     "servers": [
         {
-            "url": "https://powerpulse-t5-backend.onrender.com/api/"
+            "url": "https://goit-car-rental.onrender.com/api/"
         }
     ],
     "tags": [
         {
-            "name": "Auth",
-            "description": "Authorization endpoints"
+            "name": "Adverts",
+            "description": "Vehicles catalog endpoints"
         },
         {
-            "name": "Products",
-            "description": "Products (food) endpoints"
+            "name": "Filters",
+            "description": "Vehicles filter endpoints"
         },
         {
-            "name": "Diaries",
-            "description": "User's diary endpoints"
-        },
-        {
-            "name": "Users",
-            "description": "User's basic information"
-        },
-        {
-            "name": "Profiles",
-            "description": "User's sport profile"
-        },
-        {
-            "name": "Exercises",
-            "description": "Exercises list"
-        },
-        {
-            "name": "Statistics",
-            "description": "Application statistics"
+            "name": "Favorites",
+            "description": "Favorite vehicles endpoints"
         }
+       
     ],
     "paths": {
-        "/auth/register": {
-            "post": {
-                "tags": [
-                    "Auth"
-                ],
-                "summary": "User registration",
-                "requestBody": {
-                    "description": "Registration object",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/ReistrationRequest"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/RegistrationResponse"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad request (invalid request body)"
-                    },
-                    "409": {
-                        "description": "Email already in use"
-                    }
-                }
-            }
-        },
-        "/auth/verify": {
+        "/adverts": {
             "get": {
                 "tags": [
-                    "Auth"
+                    "Adverts"
                 ],
-                "summary": "Verify user's email",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "verificationToken",
-                        "required": true,
-                        "description": "Verification token"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Verification successful"
-                    },
-                    "404": {
-                        "description": "User not found"
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "Auth"
-                ],
-                "summary": "Request user's email verification",
-                "requestBody": {
-                    "description": "Verification object",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/VerificationRequest"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Verification email sent"
-                    },
-                    "400": {
-                        "description": "Verification has already been passed"
-                    },
-                    "404": {
-                        "description": "User not found"
-                    }
-                }
-            }
-        },
-        "/auth/login": {
-            "post": {
-                "tags": [
-                    "Auth"
-                ],
-                "summary": "User login",
-                "requestBody": {
-                    "description": "Login object",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/LoginRequest"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/LoginResponse"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Email not verified"
-                    },
-                    "404": {
-                        "description": "No such user/password combination"
-                    }
-                }
-            }
-        },
-        "/auth/current": {
-            "get": {
-                "tags": [
-                    "Auth"
-                ],
-                "summary": "Current user",
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/CurrentUserResponse"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/auth/logout": {
-            "post": {
-                "tags": [
-                    "Auth"
-                ],
-                "summary": "Logout user",
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "No content (Operation successful)"
-                    }
-                }
-            }
-        },
-        "/products": {
-            "get": {
-                "tags": [
-                    "Products"
-                ],
-                "summary": "Products list",
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
+                "summary": "Filtered adverts list",
                 "parameters": [
                     {
                         "in": "query",
-                        "name": "recommended",
-                        "schema": {
-                            "type": "boolean"
-                        },
-                        "description": "Filters by user's blood type. If not defined or traning profile doesn't exist - shows all"
-                    },
-                    {
-                        "in": "query",
-                        "name": "category_id",
+                        "name": "make",
                         "schema": {
                             "type": "string"
                         },
-                        "description": "Filters by category ID. If not defined - shows all"
+                        "description": "Filters by vehicle brand. If not defined - shows all"
                     },
                     {
                         "in": "query",
-                        "name": "query",
+                        "name": "rentalPrice",
                         "schema": {
-                            "type": "string"
+                            "type": "number"
                         },
-                        "description": "Filters by product name (partial or full). If not defined - shows all"
+                        "description": "Filters by max allowed rental price. If not defined - shows all"
+                    },
+                    {
+                        "in": "query",
+                        "name": "mileageFrom",
+                        "schema": {
+                            "type": "number"
+                        },
+                        "description": "Filters by min mileage. If not defined - shows all"
+                    },
+                    {
+                        "in": "query",
+                        "name": "mileageTo",
+                        "schema": {
+                            "type": "number"
+                        },
+                        "description": "Filters by max mileage. If not defined - shows all"
                     },
                     {
                         "in": "query",
@@ -265,18 +83,9 @@
                             "minimum": 1,
                             "default": 1
                         },
-                        "description": "Pagination page. If not defined - pagination disabled."
-                    },
-                    {
-                        "in": "query",
-                        "name": "limit",
-                        "schema": {
-                            "type": "integer",
-                            "minimum": 1,
-                            "default":20
-                        },
-                        "description": "Pagination objects per page. If not defined - pagination disabled."
+                        "description": "Pagination page (12 items per page). If not defined - shows 1st page."
                     }
+                    
                 ],
                 "responses": {
                     "200": {
@@ -284,7 +93,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ProductsResponse"
+                                    "$ref": "#/components/schemas/AdvertsResponse"
                                 }
                             }
                         }
@@ -295,24 +104,19 @@
                 }
             }
         },
-        "/products/categories": {
+        "/filters": {
             "get": {
                 "tags": [
-                    "Products"
+                    "Filters"
                 ],
-                "summary": "Product categories",
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
+                "summary": "Parameters to construct filters",
                 "responses": {
                     "200": {
                         "description": "Operation successful",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ProductCategoriesResponse"
+                                    "$ref": "#/components/schemas/FiltersResponse"
                                 }
                             }
                         }
@@ -320,36 +124,20 @@
                 }
             }
         },
-        "/diaries/{date}": {
+        "/favorites": {
             "get": {
                 "tags": [
-                    "Diaries"
+                    "Favorites"
                 ],
-                "summary": "User`s diary by date",
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "date",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "date"
-                        },
-                        "description": "Date of user's diary records"
-                    }
-                ],
+                "summary": "Favorite vehicles list",
+
                 "responses": {
                     "200": {
                         "description": "Operation successful",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/DiariesResponse"
+                                    "$ref": "#/components/schemas/FavoritesListResponse"
                                 }
                             }
                         }
@@ -358,105 +146,19 @@
                         "description": "Not found"
                     }
                 }
-            }
-        },
-        "/diaries/meals/{date}": {
-            "get": {
-                "tags": [
-                    "Diaries"
-                ],
-                "summary": "User`s meals by date",
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "date",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "date"
-                        },
-                        "description": "Date of user's meal records"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Operation successful",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/MealsResponse"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not found"
-                    }
-                }
-            }
-        },
-        "/diaries/meals/{_id}": {
-            "delete": {
-                "tags": [
-                    "Diaries"
-                ],
-                "summary": "Delete user`s meal by id",
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "_id",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "description": "Meal's Id"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Operation successful",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/MealResponse"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not found"
-                    }
-                }
-            }
-        },
-        "/diaries/meals": {
+            },
             "post": {
                 "tags": [
-                    "Diaries"
+                    "Favorites"
                 ],
-                "summary": "Add user's meal by date",
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
+                "summary": "Adding vehicle to favorites list",
                 "requestBody": {
-                    "description": "Meal object",
+                    "description": "Favorite object",
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/AddMealRequest"
+                                "$ref": "#/components/schemas/AddFavoriteRequest"
                             }
                         }
                     }
@@ -467,44 +169,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/MealResponse"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not found"
-                    }
-                }
-            },
-            "patch": {
-                "tags": [
-                    "Diaries"
-                ],
-                "summary": "Update user's meal by meal Id",
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "requestBody": {
-                    "description": "Meal object",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/UpdateMealRequest"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Operation successful",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/MealResponse"
+                                    "$ref": "#/components/schemas/FavoriteResponse"
                                 }
                             }
                         }
@@ -515,66 +180,21 @@
                 }
             }
         },
-        "/diaries/workouts/{date}": {
-            "get": {
-                "tags": [
-                    "Diaries"
-                ],
-                "summary": "User`s workouts by date",
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "date",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "date"
-                        },
-                        "description": "Date of user's workout records"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Operation successful",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/WorkoutsResponse"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not found"
-                    }
-                }
-            }
-        },
-        "/diaries/workouts/{_id}": {
+        "/favorites/{id}": {
             "delete": {
                 "tags": [
-                    "Diaries"
+                    "Favorites"
                 ],
-                "summary": "Delete user`s workout by id",
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
+                "summary": "Removing vehicle from favorites list",
                 "parameters": [
                     {
                         "in": "path",
-                        "name": "_id",
+                        "name": "id",
                         "required": true,
                         "schema": {
                             "type": "string"
                         },
-                        "description": "Workout's Id"
+                        "description": "Vehicle id to remove"
                     }
                 ],
                 "responses": {
@@ -583,386 +203,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/WorkoutResponse"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not found"
-                    }
-                }
-            }
-        },
-        "/diaries/workouts": {
-            "post": {
-                "tags": [
-                    "Diaries"
-                ],
-                "summary": "Add user's workout by date",
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "requestBody": {
-                    "description": "Workout object",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/AddWorkoutRequest"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Operation successful",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/WorkoutResponse"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not found"
-                    }
-                }
-            },
-            "patch": {
-                "tags": [
-                    "Diaries"
-                ],
-                "summary": "Update user's workout by workout Id",
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "requestBody": {
-                    "description": "Workout object",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/UpdateWorkoutRequest"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Operation successful",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/WorkoutResponse"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not found"
-                    }
-                }
-            }
-        },
-        "/users": {
-            "patch": {
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Update user's name",
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "requestBody": {
-                    "description": "User's update object",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/UpdateUserRequest"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Operation successful",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UpdateUserResponse"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not found"
-                    }
-                }
-            }
-        },
-        "/users/avatars": {
-            "patch": {
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Update user's avatar",
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "requestBody": {
-                    "description": "User's avatar file",
-                    "required": true,
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "$ref": "#/components/schemas/UpdateUserAvatarRequest"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Operation successful",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UpdateUserAvatarResponse"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not found"
-                    }
-                }
-            }
-        },
-        "/profiles": {
-            "get": {
-                "tags": [
-                    "Profiles"
-                ],
-                "summary": "User's profile",
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Operation successful",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UserSportProfileResponse"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not found"
-                    }
-                }
-            },
-            "put": {
-                "tags": [
-                    "Profiles"
-                ],
-                "summary": "User's profile",
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "requestBody": {
-                    "description": "Profile object",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/UserSportProfileRequest"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Operation successful",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UserSportProfileResponse"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not found"
-                    }
-                }
-            }
-        },
-        "/profiles/targets": {
-            "get": {
-                "tags": [
-                    "Profiles"
-                ],
-                "summary": "User's traning targets",
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Operation successful",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UserTargetsResponse"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not found"
-                    }
-                }
-            }
-        },
-        "/exercises": {
-            "get": {
-                "tags": [
-                    "Exercises"
-                ],
-                "summary": "Filtered exersices list",
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "filter",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "description": "Category filter"
-                    },
-                    {
-                        "in": "query",
-                        "name": "name",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "description": "Category name"
-                    },
-                    {
-                        "in": "query",
-                        "name": "page",
-                        "schema": {
-                            "type": "integer",
-                            "minimum": 1,
-                            "default":1
-                        },
-                        "description": "Pagination page. If not defined - pagination disabled."
-                    },
-                    {
-                        "in": "query",
-                        "name": "limit",
-                        "schema": {
-                            "type": "integer",
-                            "minimum": 1,
-                            "default":20
-                        },
-                        "description": "Pagination objects per page. If not defined - pagination disabled."
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Operation successful",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ExercisesResponse"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not found"
-                    }
-                }
-            }
-        },
-        "/exercises/groups/{filter}": {
-            "get": {
-                "tags": [
-                    "Exercises"
-                ],
-                "summary": "Grouped categories",
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "filter",
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "bodyparts",
-                                "muscles",
-                                "equipment"
-                            ]
-                        },
-                        "description": "Prefilter parameter"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Operation successful",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ExercisesResponse"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not found"
-                    }
-                }
-            }
-        },
-        "/statistics": {
-            "get": {
-                "tags": [
-                    "Statistics"
-                ],
-                "summary": "Basic statistic",
-                "responses": {
-                    "200": {
-                        "description": "Operation successful",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/BasicStatisticResponse"
+                                    "$ref": "#/components/schemas/FavoriteResponse"
                                 }
                             }
                         }
@@ -976,54 +217,6 @@
     },
     "components": {
         "schemas": {
-            "ReistrationRequest": {
-                "type": "object",
-                "required": [
-                    "name",
-                    "email",
-                    "password"
-                ],
-                "properties": {
-                    "name": {
-                        "type": "string",
-                        "description": "User's display name",
-                        "example": "Darth Vader"
-                    },
-                    "email": {
-                        "type": "string",
-                        "description": "User's email",
-                        "pattern": "/^[\\w-.]+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$/",
-                        "example": "anakin@deathstar.com"
-                    },
-                    "password": {
-                        "type": "string",
-                        "description": "User's password",
-                        "minLength": 6,
-                        "maxLength": 24
-                    }
-                }
-            },
-            "RegistrationResponse": {
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "type": "string",
-                        "description": "User's display name",
-                        "example": "Darth Vader"
-                    },
-                    "email": {
-                        "type": "string",
-                        "description": "User's email",
-                        "pattern": "/^[\\w-.]+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$/",
-                        "example": "anakin@deathstar.com"
-                    },
-                    "avatarURL": {
-                        "type": "string",
-                        "description": "User's avatar Url",
-                        "format": "url"
-                    }
-                }
-            },
             "VerificationRequest": {
                 "type": "object",
                 "required": [
@@ -1740,13 +933,6 @@
                         "type": "number"
                     }
                 }
-            }
-        },
-        "securitySchemes": {
-            "Bearer": {
-                "type": "http",
-                "scheme": "bearer",
-                "bearerFormat": "JWT"
             }
         }
     }
